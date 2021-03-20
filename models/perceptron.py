@@ -36,9 +36,20 @@ class Perceptron():
         return self.data
 
     def _convert_linear_comb_to_line(self) -> Tuple[float, float]:
-        W = self._weights
-        b = self._b
-        return (-W[0]/W[1], -b/W[1])
+
+        if len(self.data[0]) == 3:
+            W = self._weights
+            b = self._b
+            return (-W[0]/W[1], -b/W[1])
+        else:
+            w1 = self._weights[0]
+            w1 = self._weights[1]
+            w3 = self._weights[2]
+
+            def get_point(x, y, z):
+                return
+
+            # Get x and y coordinates
 
     def _get_line(self):
         return self._convert_linear_comb_to_line()
@@ -48,6 +59,17 @@ class Perceptron():
         if t >= 0:
             return 1
         return 0
+
+    def _linear_combination(self, point):
+        return np.matmul(point, self._weights) + self._b
+
+    def softmax():
+        points = self._points
+        denom = np.sum(np.exp(points))
+
+        def calc_smax(point):
+            return math.exp(point) / denom
+        return map(calc_smax, points)
 
     def _adjust(
         self,
@@ -59,9 +81,9 @@ class Perceptron():
         invalid_points = 0
         for idx in range(len(self._points)):
             point = self._points[idx]
-            y_hat = self._step_function(
-                np.matmul(point, self._weights) + self._b
-            )
+
+            y_hat = self._linear_combination(point)
+            softmax = self._softmax(point)
             if self._labels[idx] - y_hat == 1:
                 for dim, _ in enumerate(self.data[0]):
                     if idx < len(self.data[0]) - 1:
